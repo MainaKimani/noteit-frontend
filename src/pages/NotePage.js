@@ -1,9 +1,12 @@
-import React, {useState, useEffect} from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
 import SaveButton from '../components/SaveButton'
+import AuthContext from '../context/AuthContext'
 
 const NotePage = () => {
+
+    let {authTokens} = useContext(AuthContext)
 
     const params = useParams()
     let noteId = params.id
@@ -17,16 +20,20 @@ const NotePage = () => {
     let getNote = async() => {
         if (noteId==='new') 
           return
-        let response = await fetch(`/api/notes/${noteId}`)
+        let response = await fetch(`/api/notes/${noteId}`,{
+          headers:{'Authorization': 'Bearer ' + String(authTokens.access)}
+        })
         let data = await response.json()
         setNote(data)
     }
 
-    //create notes functionality 
+    
+    //create new note functionality 
     let createNote = async() => {
       fetch(`/api/notes/create/`, {
       method: "POST",
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + String(authTokens.access)},
       body: JSON.stringify(note)
     })
     }
@@ -35,7 +42,8 @@ const NotePage = () => {
     let updateNote = async() => {
       fetch(`/api/notes/${noteId}/update/`, {
       method: "PUT",
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json',
+                  'Authorization': 'Bearer ' + String(authTokens.access)},
       body: JSON.stringify(note)
     })
     }
@@ -45,6 +53,7 @@ const NotePage = () => {
     let handleSubmit = (e) => {
       if (noteId !== 'new' && note.body === '' && note.title === '' ) {
         deleteNote()
+        history('/')
       } else if (noteId !== 'new') {
         updateNote()
       } else if (noteId === 'new' && note !== null) {
@@ -52,13 +61,15 @@ const NotePage = () => {
       }
       e.preventDefault();
       history('/')
+      
     }
 
     //Delete notes functionality
     let deleteNote = async() => {
       fetch(`/api/notes/${noteId}/delete`, {
               method: 'DELETE',
-              'headers': {'Content-Type': ' application/json'},
+              'headers': {'Content-Type': ' application/json',
+              'Authorization': 'Bearer ' + String(authTokens.access)},
           })
           history('/');
           }

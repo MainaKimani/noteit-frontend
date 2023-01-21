@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import ListItem from '../components/ListItem'
 import AddButton from '../components/AddButton'
 import AuthContext from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom';
 
 const NotesListPage = () => {
 
@@ -32,6 +33,11 @@ const NotesListPage = () => {
     }
     
   }
+
+  let navigate = useNavigate()
+  let createNote = () => {
+    navigate('/note/new')
+  }
  
   return (
     <div className='notes'>
@@ -45,8 +51,10 @@ const NotesListPage = () => {
         {notes.map((note, index)=>(
           <ListItem key={index} note={note} />
         ))}
+        </div >
+      <div onClick={createNote}> 
+        <AddButton />
       </div>
-      <AddButton />
     </div>
   )
 }
