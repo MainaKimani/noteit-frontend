@@ -37,6 +37,81 @@ export const AuthProvider = ({children}) => {
           return true
         }
       }
+      function validate_username(username) {
+        if (username.match(/^[0-9a-z]+$/)){
+          return true
+        } else {
+          return false
+        }
+      }
+
+    //Register functionality
+    let registerUser= async (event) => {
+      event.preventDefault()
+      const credentials = new FormData(event.currentTarget)
+      const email = credentials.get('email')
+      const username = credentials.get('username')
+      const password1 = credentials.get('password1')
+      const password2 = credentials.get('password2')
+
+      const email_warning = document.getElementById('email_warning')
+      const password_warning1 = document.getElementById('password_warning')
+      const password_warning2 = document.getElementById('password_warning2')
+      const register_warning = document.getElementById('register_warning')
+      const username_warning = document.getElementById('username_warning')
+      username_warning.innerHTML=''
+      password_warning1.innerHTML = ''
+      password_warning2.innerHTML=''
+      email_warning.innerHTML = ''
+      register_warning.innerHTML = ''
+
+      if (!validate_email(email)) {
+          email_warning.innerHTML='Please add a valid email address'
+          return
+      }
+      if (!validate_password(password1)) {
+          password_warning1.innerHTML='Password ought to be 6 or more characters'
+          return
+       }
+       if (password1!=password2) {
+        password_warning1.innerHTML='Password entered does not match'
+        password_warning2.innerHTML='Password entered does not match'
+        return
+      }if(!validate_username){
+        username_warning.innerHTML='Username may only be composed of alphanumeric characters'
+        return
+     }
+      else{
+        console.log('Input checks passed. Pushing to server...')
+        //push to api's endpoint
+        let res = await fetch(`auth/register/`, {
+           method: "POST",
+           headers: {'Content-Type': 'application/json'},
+           body: JSON.stringify({
+            email: email,
+            username: username,
+            password: password1}),
+          credentials: 'include',
+         })
+        let data = await res.json()
+
+        if (res.status === 201) {
+          navigate('/');
+        }
+        else{
+          let errrorResponse = (JSON.stringify(data))
+          register_warning.innerHTML = errrorResponse;
+           if (errrorResponse === '{"email":["user with this email already exists."]}'){
+            email_warning.innerHTML = 'User with this email already exists.';
+           }
+           if (errrorResponse === '{"username":["The username should only contain alphanumeric characters"]}'){
+            username_warning.innerHTML = 'The username should only contain alphanumeric characters.';
+           }
+          console.log(errrorResponse)
+          console.log(res.status)
+        }
+      }  
+   }
 
     //log in functionality
     let loginUser= async (event) => {
@@ -45,8 +120,6 @@ export const AuthProvider = ({children}) => {
         const email = credentials.get('email');
         const password = credentials.get('password');
 
-        console.log(email, password);
-
         const email_warning = document.getElementById('email_warning');
         const password_warning = document.getElementById('password_warning');
         const login_warning = document.getElementById('login_warning');
@@ -54,11 +127,11 @@ export const AuthProvider = ({children}) => {
         password_warning.innerHTML = '';
         login_warning.innerHTML = '';
 
-        if (validate_email(email) === false) {
+        if (!validate_email(email)) {
             email_warning.innerHTML='Please add a valid email address';
             return
         }
-        if (validate_password(password) === false) {
+        if (!validate_password(password)) {
             password_warning.innerHTML='Password ought to be 6 or more characters';
             return
          }
@@ -74,21 +147,28 @@ export const AuthProvider = ({children}) => {
             credentials: 'include',
            })
           let data = await res.json()
+          let errorDetails = data.detail
 
           if (res.status === 200) {
             setAuthTokens(data.tokens)
             setUserToken(jwt_decode(data.tokens.access))
             localStorage.setItem('authTokens', JSON.stringify(data.tokens))
+            console.log('Passed', res.status)
 
             console.log(jwt_decode(data.tokens.access))
             const uid = jwt_decode(data.tokens.access).user_id
             let response = await fetch(`/auth/user/${uid}`)
             let loggedUser = await response.json()
             setLogged(loggedUser)
-            
             navigate('/');
-          }else{
-            console.log(res.status)
+          }
+          // if (errorDetails==='Email is not verified'){
+          //   login_warning.innerHTML= data.detail + '<a href="/register">.<br/> Kindly check your inbox or click here to send a new token.</a>'
+          // }
+          if (res.status !== 200) {
+            console.log('Failed', res.status)
+            console.log('response: ',data)
+            login_warning.innerHTML= (data.detail)
           }
         }  
      }
@@ -130,6 +210,7 @@ export const AuthProvider = ({children}) => {
       authTokens:authTokens,
       logged,logged,
       logout:logout,
+      registerUser:registerUser,
       loginUser:loginUser
     }
 
