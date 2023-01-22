@@ -73,7 +73,7 @@ export const AuthProvider = ({children}) => {
           password_warning1.innerHTML='Password ought to be 6 or more characters'
           return
        }
-       if (password1!=password2) {
+       if (password1!==password2) {
         password_warning1.innerHTML='Password entered does not match'
         password_warning2.innerHTML='Password entered does not match'
         return
@@ -147,7 +147,6 @@ export const AuthProvider = ({children}) => {
             credentials: 'include',
            })
           let data = await res.json()
-          let errorDetails = data.detail
 
           if (res.status === 200) {
             setAuthTokens(data.tokens)
@@ -208,7 +207,7 @@ export const AuthProvider = ({children}) => {
     let contextData ={
       userToken: userToken,
       authTokens:authTokens,
-      logged,logged,
+      logged:logged,
       logout:logout,
       registerUser:registerUser,
       loginUser:loginUser

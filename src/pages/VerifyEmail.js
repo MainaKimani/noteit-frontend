@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import AuthContext from '../context/AuthContext';
 import {  Button, Grid, Box,Typography, Link,
-          TextField, FormControlLabel, Checkbox,  
+          TextField
       } from '@mui/material';
 
 const VerifyEmail = () => {
