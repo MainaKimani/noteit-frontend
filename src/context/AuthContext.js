@@ -100,13 +100,23 @@ export const AuthProvider = ({children}) => {
         }
         else{
           let errrorResponse = (JSON.stringify(data))
-          register_warning.innerHTML = errrorResponse;
+          
            if (errrorResponse === '{"email":["user with this email already exists."]}'){
             email_warning.innerHTML = 'User with this email already exists.';
+           }
+           if (errrorResponse === '{"username":["user with this username already exists."]}'){
+            username_warning.innerHTML = 'User with this username already exists.';
            }
            if (errrorResponse === '{"username":["The username should only contain alphanumeric characters"]}'){
             username_warning.innerHTML = 'The username should only contain alphanumeric characters.';
            }
+           if (errrorResponse === '{"email":["user with this email already exists."],"username":["user with this username already exists."]}'){
+            email_warning.innerHTML = 'User with this email already exists.';
+            username_warning.innerHTML = 'User with this username already exists.';
+           } else{
+            register_warning.innerHTML = errrorResponse;
+           }
+           
           console.log(errrorResponse)
           console.log(res.status)
         }
