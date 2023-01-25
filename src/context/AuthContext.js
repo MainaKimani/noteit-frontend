@@ -10,6 +10,8 @@ export default AuthContext;
 
 export const AuthProvider = ({children}) => {
 
+    let proxy = 'https://noteit-staging.mainakimani.com'
+
     let authState = localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null
     let userState = localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')) : null
     let [authTokens, setAuthTokens] = useState(()=> authState)
@@ -84,7 +86,7 @@ export const AuthProvider = ({children}) => {
       else{
         console.log('Input checks passed. Pushing to server...')
         //push to api's endpoint
-        let res = await fetch(`auth/register/`, {
+        let res = await fetch(`${proxy}/auth/register/`, {
            method: "POST",
            headers: {'Content-Type': 'application/json'},
            body: JSON.stringify({
@@ -148,7 +150,7 @@ export const AuthProvider = ({children}) => {
         else{
           console.log('Input checks passed. Pushing to server...')
           //push to api's endpoint
-          let res = await fetch(`auth/login/`, {
+          let res = await fetch(`${proxy}/auth/login/`, {
              method: "POST",
              headers: {'Content-Type': 'application/json'},
              body: JSON.stringify({
@@ -166,7 +168,7 @@ export const AuthProvider = ({children}) => {
 
             console.log(jwt_decode(data.tokens.access))
             const uid = jwt_decode(data.tokens.access).user_id
-            let response = await fetch(`/auth/user/${uid}`)
+            let response = await fetch(`${proxy}/auth/user/${uid}`)
             let loggedUser = await response.json()
             setLogged(loggedUser)
             navigate('/');
@@ -194,7 +196,7 @@ export const AuthProvider = ({children}) => {
     let updateToken = async () => {
       console.log('update called')
 
-      let res = await fetch(`/auth/api/token/refresh/`, {
+      let res = await fetch(`${proxy}/auth/api/token/refresh/`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({'refresh': authTokens?.refresh}) ,

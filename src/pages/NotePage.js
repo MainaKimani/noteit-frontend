@@ -6,6 +6,8 @@ import AuthContext from '../context/AuthContext'
 
 const NotePage = () => {
 
+    let proxy = 'https://noteit-staging.mainakimani.com'
+
     let {authTokens} = useContext(AuthContext)
 
     const params = useParams()
@@ -20,7 +22,7 @@ const NotePage = () => {
     let getNote = async() => {
         if (noteId==='new') 
           return
-        let response = await fetch(`/api/notes/${noteId}`,{
+        let response = await fetch(`${proxy}/api/notes/${noteId}`,{
           headers:{'Authorization': 'Bearer ' + String(authTokens.access)}
         })
         let data = await response.json()
@@ -30,7 +32,7 @@ const NotePage = () => {
     
     //create new note functionality 
     let createNote = async() => {
-      fetch(`/api/notes/create/`, {
+      fetch(`${proxy}/api/notes/create/`, {
       method: "POST",
       headers: {'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + String(authTokens.access)},
@@ -40,7 +42,7 @@ const NotePage = () => {
 
     //update notes functionality 
     let updateNote = async() => {
-      fetch(`/api/notes/${noteId}/update/`, {
+      fetch(`${proxy}/api/notes/${noteId}/update/`, {
       method: "PUT",
       headers: {'Content-Type': 'application/json',
                   'Authorization': 'Bearer ' + String(authTokens.access)},
@@ -66,7 +68,7 @@ const NotePage = () => {
 
     //Delete notes functionality
     let deleteNote = async() => {
-      fetch(`/api/notes/${noteId}/delete`, {
+      fetch(`${proxy}/api/notes/${noteId}/delete`, {
               method: 'DELETE',
               'headers': {'Content-Type': ' application/json',
               'Authorization': 'Bearer ' + String(authTokens.access)},
