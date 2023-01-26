@@ -16,11 +16,9 @@ let getContent = (note) => {
   }
 }
 
-let proxy = 'https://noteit-staging.mainakimani.com'
-
 const ListItem = ({ note }) => {
   return (
-    <Link to={`${proxy}/note/${note.id}`}>
+    <Link to={`/note/${note.id}`}>
       <div className='notes-list-item'>
         <h3>{note.title}</h3>
         <p><span>{getTime(note)}</span>{getContent(note)}</p>
