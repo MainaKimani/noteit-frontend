@@ -104,6 +104,7 @@ export const AuthProvider = ({children}) => {
           
            if (errrorResponse === '{"email":["user with this email already exists."]}'){
             email_warning.innerHTML = 'User with this email already exists.';
+            return
            }
            if (errrorResponse === '{"username":["user with this username already exists."]}'){
             username_warning.innerHTML = 'User with this username already exists.';
@@ -114,8 +115,6 @@ export const AuthProvider = ({children}) => {
            if (errrorResponse === '{"email":["user with this email already exists."],"username":["user with this username already exists."]}'){
             email_warning.innerHTML = 'User with this email already exists.';
             username_warning.innerHTML = 'User with this username already exists.';
-           } else{
-            register_warning.innerHTML = errrorResponse;
            }
            
           console.log(errrorResponse)
