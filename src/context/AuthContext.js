@@ -93,7 +93,6 @@ export const AuthProvider = ({children}) => {
             email: email,
             username: username,
             password: password1}),
-          credentials: 'include',
          })
         let data = await res.json()
 
@@ -156,7 +155,6 @@ export const AuthProvider = ({children}) => {
              body: JSON.stringify({
               email: email,
               password: password}),
-            credentials: 'include',
            })
           let data = await res.json()
 
