@@ -14,9 +14,10 @@ const NotesListPage = () => {
     getNotes()
   })
 
+  let proxy = 'https://noteit-staging.mainakimani.com'
 
   let getNotes = async()=>{
-    let response = await fetch('/api/notes/',{
+    let response = await fetch(`${proxy}/api/notes/`,{
       method: 'GET',
       headers: {
                 'Content-Type': 'application/json',
