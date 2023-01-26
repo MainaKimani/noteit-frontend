@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 
 const Header = () => {
 
+  let proxy = 'https://noteit-staging.mainakimani.com'
+
   let {logged, userToken, logout} = useContext(AuthContext)
 
   let [user, setUser] = useState()
@@ -15,7 +17,7 @@ const Header = () => {
       return
     }
     const uid = userToken.user_id
-    let response = await fetch(`/auth/user/${uid}`)
+    let response = await fetch(`${proxy}/auth/user/${uid}`)
     let user = await response.json()
     setUser(user)
   }
