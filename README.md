@@ -2,6 +2,7 @@
 
 This is a small react project that interacts with Django on the backend (https://github.com/MainaKimani/noteit)
 
+Here is a link to a simple, functional application (React Frontend integrated with the Django backend) - https://noteit.onrender.com
 
 ## Screenshots of the app
 1. sign up
